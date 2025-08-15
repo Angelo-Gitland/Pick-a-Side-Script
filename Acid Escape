@@ -1,0 +1,96 @@
+-- 🏝️ Roblox Script Lua Land Hub Simple Script
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local player = Players.LocalPlayer
+
+-- 🏝️This Script Is Made By Angelo!
+local function createGui()
+	local ScreenGui = Instance.new("ScreenGui")
+	ScreenGui.Name = "AcidEscapeSimpleGUI"
+	ScreenGui.ResetOnSpawn = false -- 💡 Keeps GUI after respawn
+	ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ 
+	local Frame = Instance.new("Frame", ScreenGui)
+	Frame.Size = UDim2.new(0, 320, 0, 340)
+	Frame.Position = UDim2.new(0.5, -160, 0.5, -170)
+	Frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+	Frame.Active = true
+	Frame.Draggable = true
+	Instance.new("UICorner", Frame)
+ 
+	local Title = Instance.new("TextLabel", Frame)
+	Title.Size = UDim2.new(1, 0, 0, 40)
+	Title.Text = "🏝️Acid Escape Simple Script Lua Land Hub🏝️"
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.BackgroundTransparency = 1
+	Title.Font = Enum.Font.FredokaOne
+	Title.TextScaled = true
+ 
+	local function CreateButton(text, yPos, callback)
+		local Button = Instance.new("TextButton", Frame)
+		Button.Size = UDim2.new(0.9, 0, 0, 35)
+		Button.Position = UDim2.new(0.05, 0, 0, yPos)
+		Button.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+		Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Button.Font = Enum.Font.GothamBold
+		Button.TextScaled = true
+		Button.Text = text
+		Instance.new("UICorner", Button)
+		Button.MouseButton1Click:Connect(callback)
+	end
+
+	CreateButton("Remove Acid", 60, function()
+		for _, part in pairs(workspace:GetDescendants()) do
+			if part:IsA("Part") and part.Name:lower():find("acid") then
+				part:Destroy()
+			end
+		end
+	end)
+ 
+	CreateButton("Tp To Nearest Player", 110, function()
+		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+		if not root then return end
+		local closest, dist = nil, math.huge
+		for _, plr in pairs(Players:GetPlayers()) do
+			if plr ~= player and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+				local d = (root.Position - plr.Character.HumanoidRootPart.Position).Magnitude
+				if d < dist then
+					dist = d
+					closest = plr
+				end
+			end
+		end
+		if closest then
+			root.CFrame = closest.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 0)
+		end
+	end)
+ 
+	CreateButton("Acid Increase Up", 160, function()
+		local acid = workspace:FindFirstChild("Acid")
+		if acid then
+			acid.Position += Vector3.new(0, 20, 0)
+		end
+	end)
+ 
+	local Footer = Instance.new("TextLabel", Frame)
+	Footer.Size = UDim2.new(0.9, 0, 0, 50)
+	Footer.Position = UDim2.new(0.05, 0, 0, 220)
+	Footer.Text = "🏝️MADE BY: Angelo's Scripts!🏝️"
+	Footer.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Footer.BackgroundTransparency = 1
+	Footer.Font = Enum.Font.GothamBold
+	Footer.TextScaled = true
+
+	local Discord = Instance.new("TextLabel", Frame)
+	Discord.Size = UDim2.new(0.9, 0, 0, 60)
+	Discord.Position = UDim2.new(0.05, 0, 0, 270)
+	Discord.Text = "Join Our Discord Community!\nhttps://discord.gg/CVRkkatc"
+	Discord.TextColor3 = Color3.fromRGB(180, 255, 180)
+	Discord.Font = Enum.Font.Gotham
+	Discord.TextScaled = true
+	Discord.TextWrapped = true
+	Discord.BackgroundTransparency = 1
+end
+
+-- 🧬 Make GUI once and persist lol
+createGui()
